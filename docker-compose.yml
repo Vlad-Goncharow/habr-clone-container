@@ -1,0 +1,44 @@
+services:
+  backend:
+    build:
+      context: ./habr-nest-server  
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    volumes:
+      - ./habr-nest-server:/app
+      - /app/node_modules
+    env_file:
+      - ./habr-nest-server/.env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./habr-nest-client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+
+  postgres:
+    container_name: postgres-backend
+    image: postgres:15
+    env_file:
+      - ./habr-nest-server/.env.docker
+    ports:
+      - 5432:5432  
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=HabrServer
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:

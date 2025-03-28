@@ -1,0 +1,6 @@
+[submodule "habr-nest-client"]
+	path = habr-nest-client
+	url = https://github.com/Vlad-Goncharow/habr-nest-client.git
+[submodule "habr-nest-server"]
+	path = habr-nest-server
+	url = https://github.com/Vlad-Goncharow/habr-nest-server.git
